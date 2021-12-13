@@ -1,59 +1,70 @@
+let playerSelection;
+let computerSelection;
+let result;
+let playerScore = 0;
+let computerScore = 0;
+let player = document.getElementById("player");
+let computer = document.getElementById("computer");
+
 function computerPlay() {
     const choices = ["rock", "paper", "scissors"];
     let choice = choices[Math.floor(Math.random()* 3)];
     return choice;
 }
 
-function playRound() {
-    let selection = prompt("Enter your choice: ");
-    let playerSelection = selection.toLowerCase();
-    let computerSelection = computerPlay();
-    if( playerSelection === computerSelection) {
-        result = "Draw!";
+function playRound(playerSelection, computerSelection) {
+    computerSelection = computerPlay();
+    playerSelection = playerSelection.toLowerCase();
+    if (playerSelection === computerSelection) {
+        notification.textContent = "Draw!";
     } else if (playerSelection === "rock") {
         if (computerSelection === "paper") {
             computerScore += 1;
-            result = "You Lose! Paper beats Rock";
+            notification.textContent = "You Lose! Paper beats Rock";
         } else {
             playerScore += 1;
-            result = "You Win! Rock beats Scissors";
+            notification.textContent = "You Win! Rock beats Scissors";
         }
     } else if (playerSelection === "paper") {
-        if(computerSelection === "scissors") {
+        if (computerSelection === "scissors") {
             computerScore += 1;
-            result = "You Lose! Scissors beats Paper";
+            notification.textContent = "You Lose! Scissors beats Paper";
         } else {
             playerScore += 1;
-            result = "You Win! Paper beats Scissors";
+            notification.textContent = "You Win! Paper beats Scissors";
         }
-    } else if (playerSelection === "scissors") {
+    } else {
         if (computerSelection === "rock") {
             computerScore += 1;
-            result = "You Lose! Rock beats Scissors";
+            notification.textContent = "You Lose! Rock beats Scissors";
         } else {
             playerScore += 1;
-            result = "You Win! Scissors beats ";
+            notification.textContent = "You Win! Scissors beats ";
         }
-    } else {
-        result = "You entered the wrong choice!";
     }
-    console.log(result);
-    return result;
+    player.textContent = `You: ${playerScore}`;
+    computer.textContent = `Computer: ${computerScore}`;
+}       
+
+function resetGame() {
+    playerScore = 0;
+    computerScore = 0;
 }
 
-let playerScore = 0, computerScore = 0;
+const buttons = document.querySelectorAll("button");
+buttons.forEach(button => button.addEventListener('click', () => {
+    const img = document.querySelector("img")
+    playerSelection = img.alt.toLowerCase();
+    playRound(playerSelection, computerSelection);
+    if (playerScore === 5) {
+        notification.textContent = "Victory!";
+        notification.style.color = "green";
+        resetGame();
+    } else if (computerScore === 5) {
+        notification.textContent = "Defeated!";
+        notification.style.color = "red";
+        resetGame();
+    }
+}));
 
-function game() {
-    for (let n=0; n<5; n++) {
-        playRound();
-        score = playerScore + " - " + computerScore;
-        console.log(score);
-    }
-    if (playerScore > computerScore) {
-        return "Victory!"
-    } else if (playerScore < computerScore) {
-        return "Defeated"
-    } else {
-        return "Draw!"
-    }
-}
+const notification = document.querySelector("#notification");
